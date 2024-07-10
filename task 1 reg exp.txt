@@ -1,0 +1,47 @@
+Задание 1:
+Написать регулярку 
+
+У есть три строки вида
+--path.settings C:\Users\Administrator\ELK\logstash-8.11.1\config --another.key qweqweqwe
+--path.settings "C:\Program Files\Elastic" --another.key qweqweqwe
+--path.settings C:\Program Files\Elastic --another.key qweqweqwe
+
+
+Регулярака должна находить путь целиком
+
+Результат для каждого варианта 
+C:\Users\Administrator\ELK\logstash-8.11.1\config
+C:\Program Files\Elastic
+C:\Program Files\Elastic
+
+Задание 2:
+Написать регулярку, чтобы из предоставленного конфига получить все bind - IP адреса
+
+
+listen tcp_public
+        mode tcp
+        bind 10.0.210.252:9000,10.0.210.253:9000
+        bind ipv4@172.30.148.13:443 ssl crt /etc/haproxy/site.pem
+        bind ipv6@:80
+        bind /var/run/ssl-frontend.sock user root mode 600 accept-proxy
+        bind unix@ssl-frontend.sock user root mode 600 accept-proxy
+        bind 2a00:f920:192::233:80
+        server tcpsrv0 192.168.1.101:9999
+        use_backend dghj
+		
+Результат: 
+10.0.210.252:9000,10.0.210.253:9000
+ipv4@172.30.148.13:443
+ipv6@:80
+2a00:f920:192::233:80
+
+
+Задание 3:
+
+Из полученных результатов "задания 2" создать коллекцию вида
+Где ip указан не явно нужно сделать подстановку, для ip4 - значение по умолчанию 0.0.0.0
+для ip6 - значение по умолчанию :: 
+(
+	{IP: 10.0.210.252, Type: ipv4, Port: 9000},
+	
+)
