@@ -1,0 +1,3 @@
+wsl.exe
+xboxgamebarwidgets.exe
+vcredist_x86.exe
