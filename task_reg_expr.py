@@ -1,5 +1,4 @@
 import re
-import csv
 
 # Задание 1
 string_1 = r'--path.settings C:\Users\Administrator\ELK\logstash-8.11.1\config --another.key qweqweqwe'

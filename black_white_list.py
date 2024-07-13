@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import ctypes
 from datetime import datetime
@@ -42,18 +43,25 @@ def parse_date(file_name):
 
 def check_software(software_list, prefetch_files, check_type):
     results = []
+    l = []
     for pf in prefetch_files:
         if ".EXE" in pf:
             file_name = pf.split("-")[0]
+            l.append(file_name)
             if check_type == 'белый список':
                 if file_name in software_list:
                     results.append((file_name, parse_date(pf)))
-                results.append((file_name, "<b>{0}<\b>".format(parse_date(pf))))
+                else:
+                    results.append((file_name, "<b>{0}<\b>".format(parse_date(pf))))
             elif check_type == 'черный список':
                 if file_name in software_list:
                     results.append((file_name, "<b>{0}<\b>".format(parse_date(pf))))
-                results.append((file_name, parse_date(pf)))
-
+                else:
+                    results.append((file_name, parse_date(pf)))
+    syka = set(l)
+    with open("my_file.txt", 'w', encoding="utf-8") as file:
+        for x in syka:
+            file.write(x+"\n")
     return set(sorted(results, key=lambda x: x[0].lower()))
 
 
@@ -65,11 +73,10 @@ def write_results(results, status):
 
 
 def main():
-    white_list = read_list("white_list.txt")
-    black_list = read_list("black_list.txt")
-
+    LISTS = re.compile(r"")
+    CHECK_TYPE = re.compile(r"")
     check_type = "Черный Список".lower()
-
+    #check_type = "Белый список".lower()
     prefetch_files = get_prefetch_files()
     status = "не соответствует"
     results = check_software(white_list,
@@ -90,9 +97,8 @@ def main():
     print("Результаты сохранены в {0}".format(OUTPUT_FILE))
 
 if __name__ == '__main__':
-    # if is_admin():
-    #     main()
-    # else:
-    #     ctypes.windll.shell32.ShellExecuteW(
-    #         None, "runas", sys.executable, ' '.join(sys.argv), None, 1)
-    main()
+    if is_admin():
+        main()
+    else:
+        ctypes.windll.shell32.ShellExecuteW(
+            None, "runas", sys.executable, ' '.join(sys.argv), None, 1)
