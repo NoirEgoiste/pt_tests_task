@@ -26,15 +26,9 @@ def is_admin():
     :return: True, если программа запущена с правами администратора, иначе False.
     """
     try:
-        if ctypes.windll.shell32.IsUserAnAdmin():
-            print('Доступ получен')
-            ctypes.windll.shell32.IsUserAnAdmin()
-        else:
-            print('Доступ запрещен')
-
-    except Exception as e:
-        print('Функция {func_name} Ошибка'.format(
-            func_name=is_admin.__name__), e)
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        raise False
 
 
 def get_date(file_):
@@ -100,7 +94,7 @@ def list_check(file_mapping):
                     date=file_info['date']
                 )
             )
-        return check, sorted(result_list, key=lambda d: d['name'])
+        return check, sorted(result_list)
     except (AttributeError, TypeError) as e:
         print('Функция {func_name} Ошибка'.format(func_name=list_check.__name__), e)
 
@@ -126,5 +120,5 @@ if __name__ == '__main__':
     if is_admin():
         main()
     else:
-        ctypes.windll.shell32.ShellExecuteW(
-            None, "runas", sys.executable, ' '.join(sys.argv), None, 1)
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable,
+                                            " ".join(sys.argv), None, 1)
