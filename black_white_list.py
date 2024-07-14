@@ -6,7 +6,6 @@ from datetime import datetime
 
 SOFTWARE_LIST = [
     'DOCKER.EXE',
-    'DWM.EXE',
     'WSL.EXE'
 ]
 COMPARE_TYPE = 'Белый список'
@@ -36,7 +35,7 @@ def get_date(file_):
     Получает дату последнего изменения файла.
 
     :param file_: Имя файла.
-    :return: Дата последнего изменения в формате 'YYYY-MM-DD HH:MM:SS'.
+    :return: datetime последнего изменения в формате 'YYYY-MM-DD HH:MM:SS'.
     """
     try:
         full_path = os.path.join(PREFETCH_DIR, file_)
@@ -51,7 +50,7 @@ def get_info_prefetch_files():
     """
     Получает информацию о файлах в папке Prefetch.
 
-    :return: Словарь с информацией о файлах Prefetch.
+    :return: dict с информацией о файлах Prefetch.
     """
     file_mapping = {}
 
@@ -72,8 +71,8 @@ def list_check(file_mapping):
     """
     Проверяет файлы Prefetch на соответствие белому или черному списку.
 
-    :param file_mapping: Словарь с информацией о файлах Prefetch.
-    :return: Кортеж из булевого значения (соответствие списку) и отсортированного списка результатов.
+    :param file_mapping: dict с информацией о файлах Prefetch.
+    :return: bool значение и отсортированный список результатов.
     """
     result_list = []
     check = False
@@ -95,6 +94,7 @@ def list_check(file_mapping):
                 )
             )
         return check, sorted(result_list)
+        
     except (AttributeError, TypeError) as e:
         print('Функция {func_name} Ошибка'.format(func_name=list_check.__name__), e)
 
@@ -102,6 +102,7 @@ def main():
     try:
         file_mapping = get_info_prefetch_files()
         check, result_file_list = list_check(file_mapping)
+
 
         with open(OUTPUT_FILE, 'w', encoding="utf-8") as file:
             for file_info in result_file_list:
@@ -111,8 +112,8 @@ def main():
             print('Соответствует')
             return
         print('Не соответствует')
-    except Exception as e:
 
+    except Exception as e:
         print('Функция {func_name} Ошибка'.format(func_name=main.__name__), e)
 
 
@@ -122,3 +123,4 @@ if __name__ == '__main__':
     else:
         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable,
                                             " ".join(sys.argv), None, 1)
+
